@@ -20,7 +20,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
   bool _darkMode = true;
   bool _showAverage = false;
   bool _isLoading = true; // Added loading state
-  String _selectedItem = 'Apple';
+  String _selectedItem = 'Apple Inc.';
 
   @override
   void initState() {
@@ -156,7 +156,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
   }
   Future<void> loadJsonAXA() async {
     try {
-      final String jsonString = await rootBundle.loadString('web/data/axa_data.json');
+      final String jsonString = await rootBundle.loadString('web/data/cs_data.json');
       print('Loaded AXA data: $jsonString'); // Print loaded data
       setState(() {
         _data = jsonDecode(jsonString)
@@ -660,7 +660,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
   }
   Future<void> loadJsonTOTAL() async {
     try {
-      final String jsonString = await rootBundle.loadString('web/data/total_data.json');
+      final String jsonString = await rootBundle.loadString('web/data/tte_data.json');
       print('Loaded TOTAL data: $jsonString'); // Print loaded data
       setState(() {
         _data = jsonDecode(jsonString)
@@ -757,34 +757,49 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
                       });
                       // Charger les données correspondantes en fonction de l'élément sélectionné
                       switch (_selectedItem) {
-                        case 'Apple':
-                          loadJsonAAPL();
-                          break;
-                        case 'Google':
-                          loadJsonGOOG();
-                          break;
-                        case 'Bitcoin':
-                          loadJsonBTC();
-                          break;
-                        case 'Microsoft':
-                          loadJsonMSFT();
-                          break;
-                        case 'META':
-                          loadJsonMETA();
-                          break;
-                        case 'AMAZON':
-                          loadJsonAMAZON();
-                          break;
+                        case 'Apple Inc.': loadJsonAAPL();break;
+                        case 'Amazon Inc.': loadJsonAMAZON();break;
+                        case 'Groupe AXA': loadJsonAXA();break;
+                        case 'The Walt Disney Company': loadJsonDISNEY();break;
+                        case 'Google LLC': loadJsonGOOG();break;
+                        case 'Coca-Cola Company': loadJsonCOCA();break;
+                        case 'Meta Platforms Inc.': loadJsonMETA();break;
+                        case 'Bitcoin':loadJsonBTC();break;
+                        case 'Microsoft Corporation':loadJsonMSFT();break;
+                        case 'Netflix Inc.':loadJsonNETFLIX();break;
+                        case 'NVIDIA Corporation':loadJsonNVIDIA();break;
+                        case 'Tesla Inc.':loadJsonTESLA();break;
+                        case 'Visa Inc.':loadJsonVISA();break;
+                        case 'LVMH':loadJsonLVMH();break;
+                        case 'ACCOR S.A.':loadJsonACCOR();break;
+                        case 'TotalEnergies SE':loadJsonTOTAL();break;
+                        case 'Sanofi S.A.':loadJsonSANOFI();break;
+                        case "L'Oréal S.A.":loadJsonOREAL();break;
+                        case 'Airbus SE':loadJsonAIRBUS();break;
+                        case 'BNP Paribas S.A.':loadJsonBNP();break;
+                        case 'Société Générale S.A.':loadJsonSOCGENERAL();break;
+                        case 'Orange S.A.':loadJsonORANGE();break;
+                        case 'Renault S.A.':loadJsonRENAULT();break;
+                        case 'Michelin SCA':loadJsonMICHELIN();break;
+                        case 'Thales Group':loadJsonTHALES();break;
+                        case 'Capgemini SE':loadJsonCAPGEMINI();break;
+                        case 'Groupe Carrefour':loadJsonCARREFOUR();break;
+                        case 'Veolia Environnement SA':loadJsonVEOLIA();break;
+                        case 'VINCI S.A.':loadJsonVINCI();break;
+                        case 'Groupe Danone':loadJsonDANONE();break;
+                        case 'Hermès International':loadJsonHERMES();break;
+                        case 'Air Liquide':loadJsonAirLiquide();break;
+
                       }
                     },
                     hint: Text('Select a company'),
-                    items: [
-                      'Apple',
-                      'Google',
-                      'Bitcoin',
-                      'Microsoft',
-                      'META',
-                      'AMAZON',
+                    items: ["Apple Inc.", "Amazon Inc.", "Bitcoin", "Groupe AXA", "The Walt Disney Company",
+                      "Google LLC", "Coca-Cola Company", "Meta Platforms Inc.", "Microsoft Corporation",
+                      "Netflix Inc.", "NVIDIA Corporation", "Tesla Inc.", "Visa Inc.",
+                      "LVMH", "TotalEnergies SE", "Sanofi S.A.", "L'Oréal S.A.", "Airbus SE", "BNP Paribas S.A.", "Société Générale S.A.",
+                      "Orange S.A.", "Renault S.A.", "Michelin SCA", "Thales Group", "BNP Paribas SA",
+                      "ACCOR S.A.", "Groupe Carrefour", "Capgemini SE", "Veolia Environnement SA", "VINCI S.A.", "Groupe Danone",
+                      "Hermès International", "Air Liquide"
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
