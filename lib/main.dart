@@ -1,11 +1,12 @@
 ﻿import 'dart:convert';
+import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'interactive_chart.dart';
 
 void main() {
-  runApp(const bourse_dashboard());
+  runApp(MaterialApp(home: const bourse_dashboard()));
 }
 
 class bourse_dashboard extends StatefulWidget {
@@ -21,6 +22,10 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
   bool _showAverage = false;
   bool _isLoading = true; // Added loading state
   String _selectedItem = 'Apple Inc.';
+  TextEditingController _textEditingController = TextEditingController(); // Added text controller
+  String _errorText = ''; // Error text for input validation
+
+// Default moving average period
 
   @override
   void initState() {
@@ -720,15 +725,19 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
               icon: Icon(
                 _showAverage ? Icons.show_chart : Icons.bar_chart_outlined,
               ),
-              onPressed: () {
+              onPressed: () async {
                 setState(() => _showAverage = !_showAverage);
                 if (_showAverage) {
-                  _computeTrendLines();
-                } else {
-                  _removeTrendLines();
-                }
+                  // Trigger popup for text input when "Show Average" is active
+                  final enteredValue = await _showInputDialog(context);
+                  if (enteredValue != null) {
+                    _computeTrendLines(enteredValue);
+                  } else {
+                    _removeTrendLines();
+                  }
+                };
               },
-            ),
+            )
           ],
         ),
         body: SafeArea(
@@ -822,19 +831,48 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
     );
   }
 
-  _computeTrendLines() {
-    final ma7 = CandleData.computeMA(_data, 7);
-    final ma30 = CandleData.computeMA(_data, 30);
-    final ma90 = CandleData.computeMA(_data, 90);
+  Future<int?> _showInputDialog(BuildContext context) async {
+    TextEditingController tempController = TextEditingController();
+    int? enteredValue;
 
-    for (int i = 0; i < _data.length; i++) {
-      _data[i].trends = [ma7[i], ma30[i], ma90[i]];
-    }
+    await showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents closing the dialog by tapping outside it.
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter Value'),
+          content: TextField(
+            controller: tempController,
+            autofocus: true, // Automatically focuses the TextField.
+            decoration: const InputDecoration(hintText: 'Type something'),
+            keyboardType: TextInputType.number, // Adjust the keyboard type as needed.
+            onSubmitted: (value) {
+              enteredValue = int.tryParse(value);
+              Navigator.of(context).pop(); // Closes the dialog on submit.
+            },
+          ),
+        );
+      },
+    );
+
+    return enteredValue;
   }
 
+  _computeTrendLines(data) {
+    final ma7 = CandleData.computeMA(_data, data);
+
+    for (int i = 0; i < _data.length; i++) {
+      _data[i].trends = [ma7[i]];
+    }
+  }
   _removeTrendLines() {
     for (final data in _data) {
       data.trends = [];
     }
   }
 }
+
+
+
+
+
