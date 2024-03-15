@@ -740,11 +740,11 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
     if (_data.isNotEmpty) {
       final lastCandle = _data.last;
       setState(() {
-        _lastCandleDataDisplay = "Last Candle Data:\n"
-            "Open: ${lastCandle.open}\n"
-            "High: ${lastCandle.high}\n"
-            "Low: ${lastCandle.low}\n"
-            "Close: ${lastCandle.close}\n"
+        _lastCandleDataDisplay = "Last Candle Data:\n\n"
+            "Open: ${lastCandle.open}\n\n"
+            "High: ${lastCandle.high}\n\n"
+            "Low: ${lastCandle.low}\n\n"
+            "Close: ${lastCandle.close}\n\n"
             "Volume: ${lastCandle.volume}";
       });
     } else {
