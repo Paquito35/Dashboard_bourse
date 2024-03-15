@@ -1,11 +1,12 @@
 ﻿import 'dart:convert';
+//import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'interactive_chart.dart';
 
 void main() {
-  runApp(const bourse_dashboard());
+  runApp(MaterialApp(home: const bourse_dashboard()));
 }
 
 class bourse_dashboard extends StatefulWidget {
@@ -21,6 +22,8 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
   bool _showAverage = false;
   bool _isLoading = true; // Added loading state
   String _selectedItem = 'Apple Inc.';
+  String _errorText = ''; // Error text for input validation
+  String _lastCandleDataDisplay = '';
 
   @override
   void initState() {
@@ -44,6 +47,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON apple data: $e");
@@ -65,6 +69,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON google data: $e");
@@ -86,6 +91,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON BTC data: $e");
@@ -107,6 +113,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON Microsoft data: $e");
@@ -128,6 +135,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON META data: $e");
@@ -149,6 +157,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON AMAZON data: $e");
@@ -170,6 +179,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON AXA data: $e");
@@ -191,6 +201,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON DISNEY data: $e");
@@ -212,6 +223,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON COCA COLA data: $e");
@@ -233,6 +245,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON NETFLIX data: $e");
@@ -254,6 +267,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON NVIDIA data: $e");
@@ -275,6 +289,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON TESLA data: $e");
@@ -296,6 +311,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON VISA data: $e");
@@ -317,6 +333,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON ACCOR data: $e");
@@ -338,6 +355,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON Air Liquide data: $e");
@@ -359,6 +377,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON Airbus data: $e");
@@ -380,6 +399,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON Danone data: $e");
@@ -401,6 +421,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON BNP data: $e");
@@ -422,6 +443,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON CARREFOUR data: $e");
@@ -443,6 +465,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON Airbus data: $e");
@@ -464,6 +487,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON VINCI data: $e");
@@ -485,6 +509,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON SOCIETE GENERAL data: $e");
@@ -506,6 +531,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON THALES data: $e");
@@ -527,6 +553,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON LVMH data: $e");
@@ -548,6 +575,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON MICHELIN data: $e");
@@ -569,6 +597,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON OREAL data: $e");
@@ -590,6 +619,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON ORANGE data: $e");
@@ -611,6 +641,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON HERMES data: $e");
@@ -632,6 +663,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON RENAULT data: $e");
@@ -653,6 +685,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON SANOFI data: $e");
@@ -674,6 +707,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON TOTAL data: $e");
@@ -695,9 +729,28 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         ))
             .toList();
         _isLoading = false; // Set loading state to false when data is loaded
+        _updateLastCandleDataDisplay(); // Update the display after loading the new data
       });
     } catch (e) {
       print("Error loading JSON CARREFOUR data: $e");
+    }
+  }
+
+  void _updateLastCandleDataDisplay() {
+    if (_data.isNotEmpty) {
+      final lastCandle = _data.last;
+      setState(() {
+        _lastCandleDataDisplay = "Last Candle Data:\n"
+            "Open: ${lastCandle.open}\n"
+            "High: ${lastCandle.high}\n"
+            "Low: ${lastCandle.low}\n"
+            "Close: ${lastCandle.close}\n"
+            "Volume: ${lastCandle.volume}";
+      });
+    } else {
+      setState(() {
+        _lastCandleDataDisplay = "No data available for $_selectedItem";
+      });
     }
   }
 
@@ -710,7 +763,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Stocks"),
+          title: Text(_selectedItem),
           actions: [
             IconButton(
               icon: Icon(_darkMode ? Icons.dark_mode : Icons.light_mode),
@@ -720,15 +773,19 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
               icon: Icon(
                 _showAverage ? Icons.show_chart : Icons.bar_chart_outlined,
               ),
-              onPressed: () {
+              onPressed: () async {
                 setState(() => _showAverage = !_showAverage);
                 if (_showAverage) {
-                  _computeTrendLines();
-                } else {
-                  _removeTrendLines();
-                }
+                  // Trigger popup for text input when "Show Average" is active
+                  final enteredValue = await _showInputDialog(context);
+                  if (enteredValue != null) {
+                    _computeTrendLines(enteredValue);
+                  } else {
+                    _removeTrendLines();
+                  }
+                };
               },
-            ),
+            )
           ],
         ),
         body: SafeArea(
@@ -807,6 +864,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
                       );
                     }).toList(),
                   ),
+                  Text(_lastCandleDataDisplay, style: TextStyle(fontSize: 16.0)), // Display the last candle data here
                 ],
               ),
             ],
@@ -822,19 +880,57 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
     );
   }
 
-  _computeTrendLines() {
-    final ma7 = CandleData.computeMA(_data, 7);
-    final ma30 = CandleData.computeMA(_data, 30);
-    final ma90 = CandleData.computeMA(_data, 90);
 
-    for (int i = 0; i < _data.length; i++) {
-      _data[i].trends = [ma7[i], ma30[i], ma90[i]];
-    }
+  Future<int?> _showInputDialog(BuildContext context) async {
+    TextEditingController tempController = TextEditingController();
+    int? enteredValue;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents closing the dialog by tapping outside it.
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter Value'),
+          content: TextField(
+            controller: tempController,
+            autofocus: true,
+            decoration: const InputDecoration(hintText: 'Enter a moving average value'),
+            keyboardType: TextInputType.number,
+            onSubmitted: (value) {
+              int? parsedValue = int.tryParse(value);
+              if (parsedValue != null ) {
+                enteredValue = parsedValue;
+                Navigator.of(context).pop(); // Closes the dialog on submit.
+              } else {
+                // Update error message and rebuild the dialog with StatefulBuilder's setState
+                setState() {
+                  _errorText = 'Value must be between 1 and 20';
+                }
+              }
+            }
+          )
+        );
+      }
+    );
+
+    return enteredValue;
   }
 
+  _computeTrendLines(data) {
+    final ma7 = CandleData.computeMA(_data, data);
+
+    for (int i = 0; i < _data.length; i++) {
+      _data[i].trends = [ma7[i]];
+    }
+  }
   _removeTrendLines() {
     for (final data in _data) {
       data.trends = [];
     }
   }
 }
+
+
+
+
+
