@@ -208,8 +208,12 @@ class _InteractiveChartState extends State<InteractiveChart> {
               }
             }
           },
+
           child: GestureDetector(
-            // Tap and hold to view candle details
+            // Pan and zoom
+              onScaleStart: (details) => _onScaleStart(details.localFocalPoint),
+              onScaleUpdate: (details) => _onScaleUpdate(details.scale, details.localFocalPoint, w),
+            /* Tap and hold to view candle details
             onTapDown: (details) => setState(() {
               _tapPosition = details.localPosition;
             }),
@@ -218,12 +222,20 @@ class _InteractiveChartState extends State<InteractiveChart> {
               // Fire callback event and reset _tapPosition
               if (widget.onTap != null) _fireOnTapEvent();
               setState(() => _tapPosition = null);
+            },*/
+          child: MouseRegion(
+            onHover: (PointerHoverEvent event) {
+              setState(() {
+                _tapPosition = event.localPosition; // Use hover position instead of tap
+              });
             },
-            // Pan and zoom
-            onScaleStart: (details) => _onScaleStart(details.localFocalPoint),
-            onScaleUpdate: (details) =>
-                _onScaleUpdate(details.scale, details.localFocalPoint, w),
+            onExit: (PointerExitEvent event) {
+              setState(() {
+                _tapPosition = null; // Reset hover position when mouse exits
+              });
+            },
             child: child,
+          ),
           ),
         );
       },
