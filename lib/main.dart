@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'interactive_chart.dart';
+import 'package:http/http.dart' as http;
+
 
 void main() {
   runApp(MaterialApp(home: const bourse_dashboard()));
@@ -35,15 +37,55 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
   @override
   void initState() {
     super.initState();
-    loadJsonData('aapl_data'); // Load AAPL data by default
+    loadJsonData('AAPL_data'); // Load AAPL data by default
     loadAllDataAndCalculate(); // load best and worst percentage
   }
+  Map<String, String> dicSymbol = {
+    'Apple Inc.': 'aapl_data',
+    'Amazon Inc.': 'amzn_data',
+    'Groupe AXA': 'cs.pa_data',
+    'The Walt Disney Company': 'dis_data',
+    'Google LLC': 'goog_data',
+    'Coca-Cola Company': 'ko_data',
+    'Meta Platforms Inc.': 'meta_data',
+    'Bitcoin': 'btc-usd_data',
+    'Microsoft Corporation': 'msft_data',
+    'Netflix Inc.': 'nflx_data',
+    'NVIDIA Corporation': 'nvda_data',
+    'Tesla Inc.': 'tsla_data',
+    'Visa Inc.': 'v_data',
+    'LVMH': 'mc.pa_data',
+    'ACCOR S.A.': 'ac.pa_data',
+    'TotalEnergies SE': 'tte.pa_data',
+    'Sanofi S.A.': 'san.pa_data',
+    "L'Oréal S.A.": 'or.pa_data',
+    'Airbus SE': 'air.pa_data',
+    'BNP Paribas S.A.': 'bnp.pa_data',
+    'Société Générale S.A.': 'gle.pa_data',
+    'Orange S.A.': 'ora.pa_data',
+    'Renault S.A.': 'rno.pa_data',
+    'Michelin SCA': 'ml.pa_data',
+    'Thales Group': 'ho.pa_data',
+    'Capgemini SE': 'cap.pa_data',
+    'Groupe Carrefour': 'ca.pa_data',
+    'Veolia Environnement SA': 'vie.pa_data',
+    'VINCI S.A.': 'dg.pa_data',
+    'Groupe Danone': 'bn.pa_data',
+    'Hermès International': 'rms.pa_data',
+    'Air Liquide': 'ai.pa_data',
+  };
 
   Future<void> loadJsonData(String fileName) async {
-    try {
-      final String jsonString = await rootBundle.loadString('web/data/$fileName.json');
+    final String symbol = fileName.replaceAll('_data', '').toUpperCase();
+    print(symbol);
+    final String url = 'http://127.0.0.1:8000/stock/$symbol'; // Replace with your actual server address
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = jsonDecode(response.body);
       setState(() {
-        _data = jsonDecode(jsonString)
+        _data = jsonResponse
             .map<CandleData>((json) => CandleData(
           timestamp: (json['timestamp'] as int) * 1000,
           open: json['open']?.toDouble(),
@@ -57,10 +99,11 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
         _updateLastCandleDataDisplay();
         _calculatePercentageChange();
       });
-    } catch (e) {
-      print("Error loading JSON data from $fileName: $e");
+    } else {
+      print('Failed to load data from the server');
     }
   }
+
 
   void _updateLastCandleDataDisplay() {
     if (_data.isNotEmpty) {
@@ -248,64 +291,24 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Spacer(),
-                  DropdownButton(
+                  DropdownButton<String>(
                     value: _selectedItem,
                     onChanged: (String? selectedItem) {
-                      setState(() {
-                        _selectedItem = selectedItem!;
-                      });
-                      // Charger les données correspondantes en fonction de l'élément sélectionné
-                      switch (_selectedItem) {
-                        case 'Apple Inc.': loadJsonData('aapl_data'); break;
-                        case 'Amazon Inc.': loadJsonData('amzn_data'); break;
-                        case 'Groupe AXA': loadJsonData('cs_data'); break;
-                        case 'The Walt Disney Company': loadJsonData('dis_data'); break; //
-                        case 'Google LLC': loadJsonData('goog_data'); break;
-                        case 'Coca-Cola Company': loadJsonData('ko_data'); break;
-                        case 'Meta Platforms Inc.': loadJsonData('meta_data'); break;
-                        case 'Bitcoin': loadJsonData('btc-usd_data'); break;
-                        case 'Microsoft Corporation': loadJsonData('msft_data'); break;
-                        case 'Netflix Inc.': loadJsonData('nflx_data'); break;
-                        case 'NVIDIA Corporation': loadJsonData('nvda_data'); break;
-                        case 'Tesla Inc.': loadJsonData('tsla_data'); break;
-                        case 'Visa Inc.': loadJsonData('v_data'); break;
-                        case 'LVMH': loadJsonData('mc_data'); break;
-                        case 'ACCOR S.A.': loadJsonData('ac_data'); break;
-                        case 'TotalEnergies SE': loadJsonData('tte_data'); break;
-                        case 'Sanofi S.A.': loadJsonData('san_data'); break;
-                        case "L'Oréal S.A.": loadJsonData('or_data'); break;
-                        case 'Airbus SE': loadJsonData('air_data'); break;
-                        case 'BNP Paribas S.A.': loadJsonData('bnp_data'); break;
-                        case 'Société Générale S.A.': loadJsonData('gle_data'); break;
-                        case 'Orange S.A.': loadJsonData('ora_data'); break;
-                        case 'Renault S.A.': loadJsonData('rno_data'); break;
-                        case 'Michelin SCA': loadJsonData('ml_data'); break;
-                        case 'Thales Group': loadJsonData('ho_data'); break;
-                        case 'Capgemini SE': loadJsonData('cap_data'); break;
-                        case 'Groupe Carrefour': loadJsonData('ca_data'); break;
-                        case 'Veolia Environnement SA': loadJsonData('vie_data'); break;
-                        case 'VINCI S.A.': loadJsonData('dg_data'); break;
-                        case 'Groupe Danone': loadJsonData('bn_data'); break;
-                        case 'Hermès International': loadJsonData('rms_data'); break;
-                        case 'Air Liquide': loadJsonData('ai_data'); break;
+                      if (selectedItem != null && dicSymbol.containsKey(selectedItem)) {
+                        setState(() {
+                          _selectedItem = selectedItem;
+                          loadJsonData(dicSymbol[selectedItem]!); // Use the dictionary to get the file name
+                        });
                       }
                     },
-                    hint: Text('Select a company'),
-                    items: ['ACCOR S.A.', 'Air Liquide', 'Airbus SE', 'Amazon Inc.', 'Apple Inc.', 'BNP Paribas S.A.',
-                      'Bitcoin', 'Capgemini SE', 'Coca-Cola Company', 'Google LLC', 'Groupe AXA', 'Groupe Carrefour',
-                      'Groupe Danone', 'Hermès International', "L'Oréal S.A.", 'LVMH', 'Meta Platforms Inc.',
-                      'Michelin SCA', 'Microsoft Corporation', 'NVIDIA Corporation', 'Netflix Inc.', 'Orange S.A.',
-                      'Renault S.A.', 'Sanofi S.A.', 'Société Générale S.A.', 'Tesla Inc.', 'Thales Group',
-                      'The Walt Disney Company', 'TotalEnergies SE', 'VINCI S.A.', 'Veolia Environnement SA',
-                      'Visa Inc.'
-                    ].map<DropdownMenuItem<String>>((String value) {
+                    items: dicSymbol.keys.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value)
-
-                        );
+                        child: Text(value),
+                      );
                     }).toList(),
                   ),
+
 
                   Spacer(flex: 7),
                   Text("Last Candle Data:", style: TextStyle(fontSize: 16.0)), // Display the last candle data here
