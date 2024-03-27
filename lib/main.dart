@@ -351,18 +351,15 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
   }
 
   Future<void> loadAllDataAndCalculate() async {
-    List<String> symbols = [
-      'aapl_data', 'amzn_data', 'cs_data', 'dis_data', 'goog_data', 'ko_data', 'meta_data', 'btc-usd_data',
-      'msft_data', 'nflx_data', 'nvda_data', 'tsla_data', 'v_data', 'mc_data', 'ac_data', 'tte_data', 'san_data',
-      'or_data', 'air_data', 'bnp_data', 'gle_data', 'ora_data', 'rno_data', 'ml_data', 'ho_data', 'cap_data',
-      'ca_data', 'vie_data', 'dg_data', 'bn_data', 'rms_data', 'ai_data'
-    ];
+    // Populate symbols list using the keys from dicSymbol dictionary
+    List<String> symbols = dicSymbol.keys.toList();
 
     // Now you have all the data loaded, you can calculate best and worst percentages
     Map<String, double> percentageChanges = {};
     Map<String, List<CandleData>> symbolDataMap = {};
 
-    List<Future<List<CandleData>>> futureDataList = symbols.map((symbol) => loadDataForSymbol(symbol)).toList();
+    // Load data for each symbol using loadDataForSymbol function
+    List<Future<List<CandleData>>> futureDataList = symbols.map((symbol) => loadDataForSymbol(dicSymbol[symbol]!)).toList();
 
     final allData = await Future.wait(futureDataList);
     // Flatten the list of lists into a single list
@@ -373,6 +370,7 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
       symbolDataMap[symbols[i]] = allData[i];
     }
 
+    // Calculate percentage changes for each symbol
     symbolDataMap.forEach((symbol, data) {
       if (data.length > 1) {
         // Only consider the last and the before-last entries
@@ -397,13 +395,12 @@ class _bourse_dashboardState extends State<bourse_dashboard> {
       _sortedChanges = sortedChanges;
 
       _bestPercentageChange = sortedChanges.isNotEmpty ? sortedChanges.first.value : 0;
-      _bestPercentageName = sortedChanges.first.key;
+      _bestPercentageName = sortedChanges.isNotEmpty ? sortedChanges.first.key : '';
       _worstPercentageChange = sortedChanges.isNotEmpty ? sortedChanges.last.value : 0;
-      _worstPercentageName = sortedChanges.last.key;
+      _worstPercentageName = sortedChanges.isNotEmpty ? sortedChanges.last.key : '';
     });
-
   }
-  
+
     void _calculatePercentageChange() {
     if (_data.length > 1) {
       var openSecondLast = _data[_data.length - 2].open ?? 0; // Default to 0 if null
